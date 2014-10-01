@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fritter - Users</title>
+    <!--Credit to Twitter Bootstrap and Font Awesome-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <nav class="navbar-wrapper navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-collapse collapse">
+          <a class="navbar-brand" href="#">Fritter</a>
+          <ul class="nav navbar-nav navbar-left">
+              <li><a href="/users/<%= session%>"><span class="glyphicon glyphicon-home"></span> Profile</a></li>
+              <li class="active"><a href="/users"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="page-header text-center">
+        <h1>Users</h1>
+      </div>
+
+      <div class="row">
+        <% for(var i = 0; i < individuals.length; i++){ %>
+            <div class="col-sm-3">
+              <div class="well text-center">
+                <a href="/users/<%= individuals[i].name %>"> <h3><span class="fa fa-user"></span> <%= individuals[i].name %></h3></a>
+                <p> Number of Freets: <%= individuals[i].freets.length %></p>
+              </div>
+            </div>
+        <%}%>
+      </div>
+
+    </div>
+  </body>
+</html>

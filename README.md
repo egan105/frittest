@@ -1,4 +1,3 @@
-proj2
-=====
-
-Twitter Clone
+Fritter
+==================
+URL: http://fritter-ericgan.rhcloud.com/
