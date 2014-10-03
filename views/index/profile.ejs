@@ -51,7 +51,7 @@
 					<div class="col-sm-6 col-sm-offset-3">
 						<div id='scroll<%= i%>' class="well">
 							<h4><span class="fa fa-user"></span> <%=user.name%></h4>
-							<p><%= freets[i][1] %></p>
+							<p><%= freets[i].content %></p>
 							<% if(session === user.name){ %>
 								<form name="input" action="edit" method="post">
 									<div class="form-group">
@@ -59,7 +59,7 @@
 										<input type="hidden" name="i" value="<%= i%>"</input>
 									</div>
 									<div id="<%= i%>" class="form-group" style="display:none;">
-										<textarea name="user_post_edit" rows="4" cols="50" maxlength="140"><%= freets[i][1]%></textarea>
+										<textarea name="user_post_edit" rows="4" cols="50" maxlength="140"><%= freets[i].content%></textarea>
 										<button type="submit" value="Submit" class="btn btn-default btn-sm">Make Change</button>
 									</div>
 
@@ -68,7 +68,7 @@
 								<form name="input" action="delete" method="post">
 									<div class="form-group">
 										<input type="hidden" name="user" value="<%= user.name %>">
-										<input type="hidden" name="freet" value="<%= freets[i]%>">
+										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
 									</div>
 
 						        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Delete</button>

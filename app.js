@@ -5,19 +5,25 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var Users = require('./models/users');
+var Freets = require('./models/freets');
 
 var mongo = require('mongodb');
+var mongoose = require('mongoose');
 var monk = require('monk');
-var connection_string = 'localhost/fritter';
+var connection_string = 'localhost/fritterApp';
 
 if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
   connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
         process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
         process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-        process.env.OPENSHIFT_MONGODB_DB_PORT + '/fritter';
+        process.env.OPENSHIFT_MONGODB_DB_PORT + '/fritterApp';
 }
 
-var db = monk(connection_string);
+var db = mongoose.connect('mongodb://' + connection_string);
+/*Freets.remove({}, function(err) { 
+   console.log('collection removed') 
+});*/
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

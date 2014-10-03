@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var Users = require('../models/users');
+var Freets = require('../models/freets');
+var mongoose = require('mongoose')
 
 //Get home page
 router.get('/', function(req, res) {
@@ -14,22 +17,21 @@ router.get('/', function(req, res) {
 
 //Post login form
 router.post('/', function(req, res, next) {
-	var db = req.db;
-  	var students = db.get('people');
-  	students.find({'name':req.body.user.toLowerCase()}, function(err, usr) {
-        if( err || usr.length === 0) {
-        	res.render('index/index', { title: 'Fritter', message: 'Invalid username/password combination.'});
+  	Users.findOne({'name':req.body.user.toLowerCase()}, function(err, usr) {
+        if (err) return console.error(err);
+        else if (usr === null) {
+        	res.render('index/index', { title: 'Fritter', message: 'Username does not exist.'});
         }
 
         else {
-        	var username = usr[0].name;
-  			var password = usr[0].pw;
+        	var username = usr.name;
+  			var password = usr.password;
   			//If username and password match existing user then create new session with this user
 	        if (username === req.body.user.toLowerCase() && password === req.body.password) {
 	        	if (!req.session.userName) {
 	        		req.session.userName = req.body.user.toLowerCase();
 	        	}
-	        	res.redirect("/users/"+username);
+	        	res.redirect("/users/" + username);
 	        }
 	  		else {
 	  			res.render('index/index', { title: 'Fritter', message: 'Invalid username/password combination.'});
@@ -53,12 +55,19 @@ router.get('/users/:name', function(req, res) {
 		res.redirect('/');
 	}
 	else {
-		var db = req.db;
-	  	var students = db.get('people');
-		students.find({ name: req.params.name }, function (err, usr) {
-			if (err || usr.length === 0) res.redirect('/users')
+		Users.findOne({ name: req.params.name }, function (err, usr) {
+			if (err) return console.error(err);
+			else if (usr === null) {
+				res.redirect('/users');
+			}
 			else {
-				res.render('index/profile', {title: 'Fritter', user: usr[0], freets: usr[0].freets, session: req.session.userName});
+				//Get freets of user
+				Freets.find().where('_id').in(usr.freets).exec(function (err, records) {
+					if (err) console.error(err);
+					else {
+						res.render('index/profile', {title: 'Fritter', user: usr, freets: records, session: req.session.userName});
+					}
+				});
 			}
 		});
 	}
