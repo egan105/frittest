@@ -19,4 +19,4 @@ var userSchema = mongoose.Schema({
 //    return bcrypt.compareSync(password, this.local.password);
 //};
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Users', userSchema);

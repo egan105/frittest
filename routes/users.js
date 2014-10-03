@@ -49,7 +49,7 @@ router.post('/create', function(req, res, next) {
 	  			req.session.userName = req.body.user.toLowerCase();
 	  			var newUser = new Users({"name": req.body.user.toLowerCase(), "password": req.body.user_pw});
 	  			newUser.save(function(err, usr){
-					if (err) return handleError(err);
+					if (err) return console.error(err);
 					else {
 						res.redirect("/users/" + req.body.user.toLowerCase());
 					}
@@ -67,17 +67,27 @@ router.post('/newfreet', function(req, res, next) {
   	var date = d.getTime();
 
   	if (freet != '') {
-  		var newFreet = new Freets({"name": user, "time": date, "content": freet});
-  		newFreet.save(function(err, freeted){
-			if (err) return console.error(err);
-			else {
-				Users.findOneAndUpdate({"name": user}, {$push: {"freets": newFreet}}, {safe: true, upsert: true}, function(err, model) {
-				        if (err) return console.error(err);
-				        else res.redirect("/users/" + user);
-				    }
-				);
-			}
-		});
+  		Users.findOne({'name': user}, function(err, usr) {
+  			if (err) return console.error(err);
+  			else {
+  				var newFreet = new Freets({"_creatorID": usr.name, "time": date, "content": freet});
+  				newFreet.save(function(err, freeted) {
+		  			console.log(newFreet)
+					if (err) return console.error(err);
+					else {
+						console.log(freeted._id)
+						Freets
+						.findOne({ _id: freeted._id})
+						.populate('_creatorID')
+						.exec(function (err, record) {
+						  if (err) return console.error(err);
+						  console.log('The creator is %s', record._creatorID);
+						  // prints "The creator is Aaron"
+						})
+					}
+				});
+  			}
+  		});
   	}
 });
 
@@ -104,7 +114,7 @@ router.post('/edit', function(req, res, next) {
   		console.log(result)
   		if (err) return console.error(err);
   		else res.redirect("/users/" + user);
-  	})
+  	});
 });
 
 module.exports = router;

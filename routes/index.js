@@ -63,6 +63,7 @@ router.get('/users/:name', function(req, res) {
 			else {
 				//Get freets of user
 				Freets.find().where('_id').in(usr.freets).exec(function (err, records) {
+					console.log(usr)
 					if (err) console.error(err);
 					else {
 						res.render('index/profile', {title: 'Fritter', user: usr, freets: records, session: req.session.userName});

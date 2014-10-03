@@ -5,12 +5,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var Users = require('./models/users');
-var Freets = require('./models/freets');
+//var Users = require('./models/users');
+//var Freets = require('./models/freets');
 
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
-var monk = require('monk');
 var connection_string = 'localhost/fritterApp';
 
 if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
@@ -48,8 +47,8 @@ app.use(function(req,res,next){
     next();
 });
 
-app.use('/users', users);
 app.use('/', routes);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
