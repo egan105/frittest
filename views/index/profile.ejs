@@ -55,7 +55,7 @@
 							<% if(session === user.name){ %>
 								<form name="input" action="edit" method="post">
 									<div class="form-group">
-										<input type="hidden" name="user" value="<%= user.name %>">
+										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
 										<input type="hidden" name="i" value="<%= i%>"</input>
 									</div>
 									<div id="<%= i%>" class="form-group" style="display:none;">
@@ -67,7 +67,6 @@
 						        </form>
 								<form name="input" action="delete" method="post">
 									<div class="form-group">
-										<input type="hidden" name="user" value="<%= user.name %>">
 										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
 									</div>
 

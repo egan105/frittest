@@ -5,8 +5,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var Users = require('./models/users');
-//var Freets = require('./models/freets');
+var Users = require('./models/users');
+var Freets = require('./models/freets');
 
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
@@ -20,7 +20,7 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 }
 
 var db = mongoose.connect('mongodb://' + connection_string);
-/*Freets.remove({}, function(err) { 
+/*Users.remove({}, function(err) { 
    console.log('collection removed') 
 });*/
 

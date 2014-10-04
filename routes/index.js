@@ -51,7 +51,10 @@ router.get('/logout', function(req, res) {
 //Go to user profile page
 router.get('/users/:name', function(req, res) {
 	//Only allow access to user pages if a user is logged in
-	if (!req.session.userName) {
+	if (req.params.name === 'new') {
+		res.render('users/new', { title: 'Add New User', message: '' });
+	}
+	else if (!req.session.userName) {
 		res.redirect('/');
 	}
 	else {
@@ -63,7 +66,6 @@ router.get('/users/:name', function(req, res) {
 			else {
 				//Get freets of user
 				Freets.find().where('_id').in(usr.freets).exec(function (err, records) {
-					console.log(usr)
 					if (err) console.error(err);
 					else {
 						res.render('index/profile', {title: 'Fritter', user: usr, freets: records, session: req.session.userName});

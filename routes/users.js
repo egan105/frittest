@@ -70,19 +70,18 @@ router.post('/newfreet', function(req, res, next) {
   		Users.findOne({'name': user}, function(err, usr) {
   			if (err) return console.error(err);
   			else {
-  				var newFreet = new Freets({"_creatorID": usr.name, "time": date, "content": freet});
+  				var newFreet = new Freets({"_creatorID": usr._id, "time": date, "content": freet});
   				newFreet.save(function(err, freeted) {
-		  			console.log(newFreet)
 					if (err) return console.error(err);
 					else {
-						console.log(freeted._id)
-						Freets
-						.findOne({ _id: freeted._id})
-						.populate('_creatorID')
-						.exec(function (err, record) {
-						  if (err) return console.error(err);
-						  console.log('The creator is %s', record._creatorID);
-						  // prints "The creator is Aaron"
+						//Populate the freet with the User
+						Freets.findOne({ _id: freeted._id}).populate('_creatorID').exec(function (err, record) {
+							if (err) return console.error(err);
+							else {
+								usr.freets.push(record);
+								usr.save(function(err, update) {if (err) return console.error(err);})
+								res.redirect("/users/" + record._creatorID.name);
+							}
 						})
 					}
 				});
@@ -93,28 +92,38 @@ router.post('/newfreet', function(req, res, next) {
 
 //Delete freets from profile
 router.post('/delete', function(req, res, next) {
-  	var user = req.body.user.toLowerCase();
-
-  	var id = mongoose.Types.ObjectId(req.body.freet);
-  	Freets.find({_id: id}).remove(function(err, result) {
+  	var user = req.session.userName;
+	var id = mongoose.Types.ObjectId(req.body.freet);
+	Freets.findOne({_id: id}, function(err, result) {
   		if (err) return console.error(err);
-  		else res.redirect("/users/" + user);
-  	})
+  		else {
+  			//Remove freet from database
+  			result.remove(function(err, valid) {
+  				if (err) return console.error(err);
+  				else {
+  					//Update the users containing deleted freets
+  					Users.update({_id: result._creatorID}, {$pull : {freets : result._id}}, function(err, outcome) {
+  						if (err) return console.error(err);
+  						else res.redirect("/users/" + user);
+  					});
+  				}
+  			});
+  		}
+  	});
 });
 
 //Edit a freet on one's profile
 router.post('/edit', function(req, res, next) {
-  	var user = req.body.user.toLowerCase();
+  	var user = req.session.userName;
   	var newFreet = req.body.user_post_edit;
   	var d = new Date();
   	var date = d.getTime()
 
   	var id = mongoose.Types.ObjectId(req.body.freet);
-  	Freets.update({_id: id}, {"time": date, "content": newFreet}, function(err, result) {
-  		console.log(result)
-  		if (err) return console.error(err);
-  		else res.redirect("/users/" + user);
-  	});
+  	Freets.findByIdAndUpdate(id, { $set: { time: date, content: newFreet }}, function (err, result) {
+		if (err) return handleError(err);
+		else res.redirect("/users/" + user);
+	});
 });
 
 module.exports = router;
