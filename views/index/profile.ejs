@@ -13,6 +13,7 @@
 					<ul class="nav navbar-nav navbar-left">
 						<li <% if(session === user.name){ %>class="active" <%}%>><a href="/users/<%= session %>"><span class="glyphicon glyphicon-home"></span> Profile</a></li>
 						<li><a href="/users"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+						<li><a href="/users/<%= session%>/newsfeed"><span class="glyphicon glyphicon-list-alt"></span> News Feed</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
@@ -22,8 +23,12 @@
 	    </nav>
 		<div class="container">
 			<div class="page-header text-center">
-				<h1 name="user"><%= user.name %></h1>
+				<h1><%= user.name %></h1>
 				<% if(session === user.name){ %>
+					<div class="row text-center">
+			            <a href="/users/<%= session %>" class="btn btn-default btn-sm active">View Freets</a>
+			            <a href="/users/<%= session %>/following" class="btn btn-default btn-sm">Following: <%= user.following.length %></a>
+			        </div>
 					<hr>
 					<form name="input" action="newfreet" method="post">
 						<h3>Post a Freet</h1>
@@ -36,13 +41,22 @@
 			        </form>
 			    <%}%>
 			    <% if (session !== user.name) { %>
-					<form name="input" action="follow" method="post">
-			        	<button type="submit" value="Submit" class="btn btn-info btn-sm">Follow</button>
-			        </form>
+			    	<% if (!following) { %>
+						<form name="input" action="follow" method="post">
+							<input type="hidden" name="follow" value="<%= user.name %>">
+				        	<button type="submit" value="Follow" class="follow btn btn-info btn-sm fixedSize">Follow</button>
+				        </form>
+				    <%}%>
+				    <% if (following) { %>
+						<form name="input" action="unfollow" method="post">
+							<input type="hidden" name="unfollow" value="<%= user.name %>">
+				        	<button type="submit" value="Unollow" class="unfollow btn btn-success btn-sm fixedSize">Following</button>
+				        </form>
+				    <%}%>
 			    <%}%>
 			</div>
-
 			<div class="row">
+				<p><%= user %></p>
 				<% if (freets.length === 0) {%>
 					<div class="row text-center">
 						<h3>No freets exist for this user.</h3>
@@ -50,11 +64,12 @@
 
 				<%}%>
 				<% for(var i = freets.length-1; i > -1; i--){ %>
+					<p><%= freets[i] %></p>
 					<div class="col-sm-6 col-sm-offset-3">
 						<div id='scroll<%= i%>' class="well">
-							<h4><span class="fa fa-user"></span> <%=user.name%></h4>
+							<h4><span class="fa fa-user"></span> <%=freets[i]._creatorID%></h4>
 							<p><%= freets[i].content %></p>
-							<% if(session === user.name){ %>
+							<% if(session === freets[i]._creatorID && session === user.name){ %>
 								<form name="input" action="edit" method="post">
 									<div class="form-group">
 										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
@@ -75,14 +90,25 @@
 						        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Delete</button>
 						        </form>
 					        <%}%>
-					        <% if(session !== user.name){ %>
-					        	<form name="input" action="retweet" method="post">
-									<div class="form-group">
-										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
-									</div>
+					        <% if(session !== freets[i]._creatorID){ %>
+					        	<% if(session !== user.name){ %>
+						        	<form name="input" action="retweet" method="post">
+										<div class="form-group">
+											<input type="hidden" name="freet" value="<%= freets[i]._id%>">
+										</div>
 
-						        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Retweet</button>
-						        </form>
+							        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Retweet</button>
+							        </form>
+							    <%}%>
+						        <% if(session === user.name){ %>
+							        <form name="input" action="untweet" method="post">
+										<div class="form-group">
+											<input type="hidden" name="freet" value="<%= freets[i]._id%>">
+										</div>
+
+							        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Untweet</button>
+							        </form>
+						        <%}%>
 					        <%}%>
 						</div>
 					</div>

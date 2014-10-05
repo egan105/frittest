@@ -6,7 +6,8 @@ var userSchema = mongoose.Schema({
     name: String,
     password: String,
     freets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}],
-    following: [{type: mongoose.Schema.Types.ObjectId, ref: 'Users'}]
+    following: [{type: String, ref: 'Users'}],
+    newsfeed: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}]
 });
 
 // methods ======================

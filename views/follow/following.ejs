@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fritter - Following</title>
+    <!--Credit to Twitter Bootstrap and Font Awesome-->
+    <%- include ../header.ejs %>
+  </head>
+  <body>
+    <nav class="navbar-wrapper navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-collapse collapse">
+          <a class="navbar-brand" href="#">Fritter</a>
+          <ul class="nav navbar-nav navbar-left">
+              <li class="active"><a href="/users/<%= session%>"><span class="glyphicon glyphicon-home"></span> Profile</a></li>
+              <li><a href="/users"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+              <li><a href="/users/newsfeed"><span class="glyphicon glyphicon-list-alt"></span> News Feed</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="page-header text-center">
+        <h1><%= user.name %></h1>
+        <% if(session === user.name){ %>
+          <div class="row text-center">
+            <a href="/users/<%= session %>" class="btn btn-default btn-sm">View Freets</a>
+            <a href="/users/<%= session %>/following" class="btn btn-default btn-sm active">Following: <%= user.following.length %></a>
+          </div>
+        <%}%>
+      </div>
+
+      <div class="row">
+        <% for(var i = 0; i < user.following.length; i++){ %>
+            <div class="col-sm-3">
+              <div class="well text-center">
+                <a href="/users/<%= user.following[i] %>"> <h3><span class="fa fa-user"></span> <%= user.following[i] %></h3></a>
+              </div>
+            </div>
+        <%}%>
+      </div>
+
+    </div>
+  </body>
+</html>

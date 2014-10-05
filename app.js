@@ -20,9 +20,9 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 }
 
 var db = mongoose.connect('mongodb://' + connection_string);
-/*Users.remove({}, function(err) { 
-   console.log('collection removed') 
-});*/
+// Users.remove({}, function(err) { 
+//    console.log('collection removed') 
+// });
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
