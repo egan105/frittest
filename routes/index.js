@@ -26,7 +26,7 @@ router.post('/', function(req, res, next) {
         else {
         	var username = usr.name;
   			var password = usr.password;
-  			//If username and password match existing user then create new session with this user
+  			//If login information match existing user then create new session with this user
 	        if (username === req.body.user.toLowerCase() && password === req.body.password) {
 	        	if (!req.session.userName) {
 	        		req.session.userName = req.body.user.toLowerCase();

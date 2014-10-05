@@ -3,10 +3,7 @@
 	<head>
 		<title>Fritter - Profile</title>
 		<!--Credit to Twitter Bootstrap and Font Awesome-->
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    	<link rel='stylesheet' href='/stylesheets/style.css' />
-    	<script src="/scripts/fritter.js"></script>
+		<%- include ../header.ejs %>
 	</head>
 	<body>
 		<nav class="navbar-wrapper navbar-default navbar-fixed-top" role="navigation">
@@ -36,6 +33,11 @@
 						</div>
 
 			        	<button type="submit" value="Submit" class="btn btn-info btn-sm">Post</button>
+			        </form>
+			    <%}%>
+			    <% if (session !== user.name) { %>
+					<form name="input" action="follow" method="post">
+			        	<button type="submit" value="Submit" class="btn btn-info btn-sm">Follow</button>
 			        </form>
 			    <%}%>
 			</div>
@@ -71,6 +73,15 @@
 									</div>
 
 						        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Delete</button>
+						        </form>
+					        <%}%>
+					        <% if(session !== user.name){ %>
+					        	<form name="input" action="retweet" method="post">
+									<div class="form-group">
+										<input type="hidden" name="freet" value="<%= freets[i]._id%>">
+									</div>
+
+						        	<button type="submit" value="Submit" class="btn btn-default btn-sm">Retweet</button>
 						        </form>
 					        <%}%>
 						</div>

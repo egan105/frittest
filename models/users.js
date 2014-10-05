@@ -5,7 +5,8 @@ var Freets = require('../models/freets');
 var userSchema = mongoose.Schema({
     name: String,
     password: String,
-    freets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}]
+    freets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}],
+    following: [{type: mongoose.Schema.Types.ObjectId, ref: 'Users'}]
 });
 
 // methods ======================

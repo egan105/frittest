@@ -4,6 +4,11 @@ var Users = require('../models/users');
 var Freets = require('../models/freets');
 var mongoose = require('mongoose');
 
+//Return whether or not the value is in the array
+var isInArray = function(value, array) {
+  return array.indexOf(value) > -1;
+}
+
 //Get the users page, showing all the existing users
 router.get('/', function(req, res) {
 	//Only logged in users can access this page
@@ -61,7 +66,7 @@ router.post('/create', function(req, res, next) {
 
 //Post a new freet
 router.post('/newfreet', function(req, res, next) {
-  	var user = req.body.user.toLowerCase();
+  	var user = req.session.userName
   	var freet = req.body.user_post;
   	var d = new Date();
   	var date = d.getTime();
@@ -121,9 +126,34 @@ router.post('/edit', function(req, res, next) {
 
   	var id = mongoose.Types.ObjectId(req.body.freet);
   	Freets.findByIdAndUpdate(id, { $set: { time: date, content: newFreet }}, function (err, result) {
+  		console.log(result._creatorID.name)
 		if (err) return handleError(err);
 		else res.redirect("/users/" + user);
 	});
+});
+
+//Edit a freet on one's profile
+router.post('/retweet', function(req, res, next) {
+  	var user = req.session.userName;
+
+  	var id = mongoose.Types.ObjectId(req.body.freet);
+  	Freets.findOne({_id: id}, function(err, result) {
+  		console.log(result)
+  		if (err) return console.error(err);
+  		else {
+  			Users.findOne({ name: user}, function(err, usr) {
+  				console.log(usr)
+  				result.retweetsID.push(usr._id);
+  				result.save(function(err, update) {if (err) return console.error(err);});
+  				//Cannot retweet the same tweet multiple tiimes
+  				if (!isInArray(result._id, usr.freets)) {
+	  				usr.freets.push(result);
+	  				usr.save(function(err, update2) {if (err) return console.error(err);});
+	  			}
+				res.redirect("/users/" + result._creatorID.name);
+  			});
+  		}
+  	});
 });
 
 module.exports = router;

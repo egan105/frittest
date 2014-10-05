@@ -4,9 +4,11 @@ var Users = require('../models/users')
 
 //Define the schema for our Tweets model
 var freetsSchema = mongoose.Schema({
-    _creatorID: { type: String, ref: 'Users' },
+    _creatorID: { type: mongoose.Schema.Types.ObjectId, ref: 'Users' },
     time: Date,
-    content: String
+    content: String,
+    retweetsID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }]
+
 });
 
 module.exports = mongoose.model('Freets', freetsSchema);
