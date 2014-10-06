@@ -10,3 +10,7 @@ a {
 .fixedSize {
     width: 100px;
 }
+
+.gold {
+    color: #CCCC00;
+}

@@ -6,19 +6,7 @@ var userSchema = mongoose.Schema({
     name: String,
     password: String,
     freets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}],
-    following: [{type: String, ref: 'Users'}],
-    newsfeed: [{type: mongoose.Schema.Types.ObjectId, ref: 'Freets'}]
+    following: [{type: String, ref: 'Users'}]
 });
-
-// methods ======================
-// generating a hash
-//userSchema.methods.generateHash = function(password) {
-//    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-//};
-
-// checking if password is valid
-//userSchema.methods.validPassword = function(password) {
-//    return bcrypt.compareSync(password, this.local.password);
-//};
 
 module.exports = mongoose.model('Users', userSchema);

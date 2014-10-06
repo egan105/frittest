@@ -9,6 +9,19 @@ var isInArray = function(value, array) {
   return array.indexOf(value) > -1;
 }
 
+//Extend an array with another array
+var pushToNewsfeed = function(value, array) {
+	var clean = array;
+	value.forEach(function(entry) {
+		//Prevents duplicates of tweet and tweets by logged in user from appearing on the news feed
+		if (!(isInArray(entry, clean))) {
+			clean.push(entry);
+		}
+	});
+	console.log(clean);
+	return clean
+}
+
 //Get home page
 router.get('/', function(req, res) {
 	//Redirect to user profile page if already logged in
@@ -70,20 +83,19 @@ router.get('/users/:name', function(req, res) {
 			}
 			else {
 				//Get freets of user
-				var allFreets = []
-				usr.freets.forEach(function(entry) {
-					Freets.findOne({_id: entry}, function (err, record) {
-						if (err) console.error(err);
-						allFreets.push(record)
-					});
-				});
-				
-				Users.findOne({ name: req.session.userName }, function (err, orig) {
-					if (err) return console.error(err);
-					else if (isInArray(usr.name, orig.following)) {
-						res.render('index/profile', {title: 'Fritter', user: usr, freets: allFreets, session: req.session.userName, following: true});
+				Freets.find({_id: {$in: usr.freets}}, function (err, record) {
+					console.log(record);
+					if (err) console.error(err);
+					else {
+						Users.findOne({ name: req.session.userName }, function (err, orig) {
+							console.log(orig.freets.indexOf(usr.freets[0]))
+							if (err) return console.error(err);
+							else if (isInArray(usr.name, orig.following)) {
+								res.render('index/profile', {title: 'Fritter', user: usr, freets: record, session: orig, following: true});
+							}
+							else res.render('index/profile', {title: 'Fritter', user: usr, freets: record, session: orig, following: false});
+						});
 					}
-					else res.render('index/profile', {title: 'Fritter', user: usr, freets: allFreets, session: req.session.userName, following: false});
 				});
 			}
 		});
@@ -110,7 +122,7 @@ router.get('/users/:name/following', function(req, res) {
 	}
 });
 
-//Get the users page, showing all the existing users
+//Get the users page, showing all users that begin with the search
 router.post('/search', function(req, res) {
 	var search = req.body.search.toLowerCase();
 	//Only logged in users can access this page
@@ -119,6 +131,7 @@ router.post('/search', function(req, res) {
 	}
 
 	else {
+		//All users that start with the search will appear
 		Users.find({name: new RegExp('^'+search)}, function(err, usr){
 			if (err) return console.error(err);
 			else {
@@ -127,6 +140,5 @@ router.post('/search', function(req, res) {
 		});
 	}
 });
-
 
 module.exports = router;

@@ -73,7 +73,7 @@ router.post('/newfreet', function(req, res, next) {
   		Users.findOne({'name': user}, function(err, usr) {
   			if (err) return console.error(err);
   			else {
-  				var newFreet = new Freets({"_creatorID": usr.name, "udatedAt": date, "content": freet});
+  				var newFreet = new Freets({"_creatorID": usr.name, "updatedAt": date, "content": freet});
   				newFreet.save(function(err, freeted) {
 					if (err) return console.error(err);
 					else {
@@ -138,7 +138,7 @@ router.post('/untweet', function(req, res, next) {
   			});
   			result.freets.pull(id)
   			result.save(function(err, update2) {if (err) return console.error(err);});
-  			res.redirect("/users/" + user);
+  			res.redirect("/users/" + req.body.home);
   		}
   	});
 });
@@ -157,7 +157,7 @@ router.post('/edit', function(req, res, next) {
 	});
 });
 
-//Edit a freet on one's profile
+//Retweet a post
 router.post('/retweet', function(req, res, next) {
   	var user = req.session.userName;
 
@@ -178,12 +178,13 @@ router.post('/retweet', function(req, res, next) {
 		  				usr.freets.push(result);
 		  				usr.save(function(err, update2) {if (err) return console.error(err);});
 		  			}
-		  			res.redirect("/users/" + result._creatorID);
+		  			res.redirect("/users/" + req.body.home);
 				}
   			});
   		}
   	});
 });
+
 
 //Add user to list of people following
 router.post('/follow', function(req, res, next) {

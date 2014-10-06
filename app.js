@@ -20,12 +20,13 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 }
 
 var db = mongoose.connect('mongodb://' + connection_string);
-// Users.remove({}, function(err) { 
+// Freets.remove({}, function(err) { 
 //    console.log('collection removed') 
 // });
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var news = require('./routes/newsfeed');
 
 var app = express();
 
@@ -49,6 +50,7 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/newsfeed', news);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
