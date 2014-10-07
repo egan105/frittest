@@ -18,7 +18,6 @@ var pushToNewsfeed = function(value, array) {
 			clean.push(entry);
 		}
 	});
-	console.log(clean);
 	return clean
 }
 
@@ -33,9 +32,9 @@ router.get('/', function(req, res) {
 			if (err) return console.error(err);
 			else {
 				Users.find({name: {$in: usr.following}}, function (err, follow) {
-					console.log(follow);
 					if (err) return console.error(err);
 					else {
+						//For every user following, get their freets and retweets
 						var news = usr.freets;
 						for(var i = 0; i < follow.length; i++) {
 							news = pushToNewsfeed(follow[i].freets, news);
@@ -59,7 +58,6 @@ router.post('/retweetFeed', function(req, res, next) {
   	Freets.findOne({_id: id}, function(err, result) {
   		if (err) return console.error(err);
   		else {
-  			console.log(result)
   			Users.findOne({ name: user}, function(err, usr) {
   				if (err) return handleError(err);
   				else {
@@ -87,7 +85,7 @@ router.post('/deleteFeed', function(req, res, next) {
   		if (err) return console.error(err);
   		else {
   			Freets.findOne({_id: id}, function(err, frt) {
-  				//Remove this tweet on anyone's profile that has retweeted it
+  				//Remove this freet on anyone's profile that has retweeted it
   				frt.retweetsID.forEach(function(entry) {
   					Users.findOne({name: entry}, function(err, usr) {
   						if (err) return console.error(err);
@@ -113,7 +111,7 @@ router.post('/untweetFeed', function(req, res, next) {
   		if (err) return console.error(err);
   		else {
   			Freets.findOne({_id: id}, function(err, frt) {
-  				//Remove this tweet on anyone's profile that has retweeted it
+  				//Remove this freet on anyone's profile that has retweeted it
   				frt.retweetsID.pull(result.name)
   				frt.save(function(err, update) {if (err) return console.error(err);});
   			});

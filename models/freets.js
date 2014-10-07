@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Users = require('../models/users')
-//mongoose.model('Users');
 
 //Define the schema for our Tweets model
 var freetsSchema = mongoose.Schema({

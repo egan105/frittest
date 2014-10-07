@@ -26,8 +26,8 @@
 				<h1><%= user.name %></h1>
 				<% if(session.name === user.name){ %>
 					<div class="row text-center">
-			            <a href="/users/<%= session.name %>" class="btn btn-default btn-sm active">View Freets</a>
-			            <a href="/users/<%= session.name %>/following" class="btn btn-default btn-sm">Following: <%= user.following.length %></a>
+			            <a href="/users/<%= session.name %>" class="btn btn-default btn-sm active">Freets: <%= session.freets.length %></a>
+			            <a href="/users/<%= session.name %>/following" class="btn btn-default btn-sm">Following: <%= session.following.length %></a>
 			        </div>
 					<hr>
 					<form name="input" action="newfreet" method="post">
@@ -67,6 +67,9 @@
 					<!--<p><%= freets[i] %></p>-->
 					<div class="col-sm-6 col-sm-offset-3">
 						<div id='scroll<%= i%>' class="well">
+							<div class="date" style="float:right;padding-top:12px;">
+								<p><span data-livestamp="<%= freets[i].updatedAt %>"></span></p>
+							</div>
 							<a href="/users/<%=freets[i]._creatorID%>"><h4><span class="fa fa-user"></span> <%=freets[i]._creatorID%></h4></a>
 							<p><%= freets[i].content %></p>
 							<% if(session.name === freets[i]._creatorID && session.name === user.name){ %>

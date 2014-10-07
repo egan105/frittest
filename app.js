@@ -20,9 +20,6 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
 }
 
 var db = mongoose.connect('mongodb://' + connection_string);
-// Freets.remove({}, function(err) { 
-//    console.log('collection removed') 
-// });
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

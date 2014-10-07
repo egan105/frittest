@@ -1,3 +1,4 @@
+//Used for edit, toggle showing the edit form
 function toggle(id) {
 	var e = document.getElementById(id);
 	if(e.style.display == 'block') {
@@ -9,6 +10,7 @@ function toggle(id) {
 }
 
 $(document).ready(function(){
+	$("time.timeago").timeago();
 	$('.unfollow').hover(function(){
 		$(this).removeClass("btn-success");
 		$(this).addClass("btn-danger");

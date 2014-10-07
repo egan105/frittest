@@ -4,6 +4,11 @@
 		<title>Fritter - Profile</title>
 		<!--Credit to Twitter Bootstrap and Font Awesome-->
 		<%- include ../header.ejs %>
+		<script>
+			jQuery(document).ready(function() {
+				jQuery("time.timeago").timeago();
+			});
+		</script>
 	</head>
 	<body>
 		<nav class="navbar-wrapper navbar-default navbar-fixed-top" role="navigation">
@@ -35,6 +40,9 @@
 				<% for(var i = freets.length-1; i > -1; i--){ %>
 					<div class="col-sm-6 col-sm-offset-3">
 						<div id='scroll<%= i%>' class="well">
+							<div class="date" style="float:right;padding-top:12px;">
+								<p><span data-livestamp="<%= freets[i].updatedAt %>"></span></p>
+							</div>
 							<a href="/users/<%=freets[i]._creatorID%>"><h4><span class="fa fa-user"></span> <%=freets[i]._creatorID%></h4></a>
 							<p><%= freets[i].content %></p>
 							<% if(session.name === freets[i]._creatorID){ %>
